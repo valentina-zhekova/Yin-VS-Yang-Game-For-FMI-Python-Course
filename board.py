@@ -2,7 +2,7 @@ class Board:
 
     def __init__(self, feasible_size, feasible_start_stones,
                  board, player1, player2):
-        self.__size = feasible_size
+        self.size = feasible_size
         self.__start_stones = feasible_start_stones
         self.__players = (player1, player2)
         self.__board = self.__set_board(board)
@@ -13,19 +13,19 @@ class Board:
         else:
             result = []
             if self.__start_stones == 1:
-                for index in range(self.__size):
+                for index in range(self.size):
                     row = []
-                    for col in range(self.__size):
+                    for col in range(self.size):
                         row.append('_')
                     result.append(row)
                 result[0][0] = self.__players[0].sign
                 self.__players[0].add_stone(0, 0)
-                n = self.__size - 1
+                n = self.size - 1
                 result[n][n] = self.__players[1].sign
                 self.__players[1].add_stone(n, n)
             else:
-                k = self.__start_stones // self.__size
-                n = self.__size
+                k = self.__start_stones // self.size
+                n = self.size
                 for row in range(k):
                     result.append(self.__set_board_row(self.__players[0].sign,
                                                        row, self.__players[0]))
@@ -44,7 +44,7 @@ class Board:
 
     def __set_board_row(self, sign, row_index, player=None):
         row = []
-        for col in range(self.__size):
+        for col in range(self.size):
             row.append(sign)
             if player:
                 player.add_stone(row_index, col)
@@ -84,7 +84,7 @@ class Board:
                 is_different_field and is_in_far_range)
 
     def __is_in_board_range(self, index):
-        return 0 <= index and index < self.__size
+        return 0 <= index and index < self.size
 
     def __is_in_field_range(self, from_index, to_index):
         return (from_index - 2) <= to_index and to_index <= (from_index + 2)
@@ -131,13 +131,13 @@ class Board:
         result = ""
 
         horizontal_index_line = "    "
-        for col in range(self.__size):
+        for col in range(self.size):
             horizontal_index_line += str(col) + " "
             if col < 10:
                 horizontal_index_line += " "
         result += horizontal_index_line + "\n\n"
 
-        for row in range(self.__size):
+        for row in range(self.size):
             vertical_index = str(row) + " "
             if row < 10:
                 vertical_index += " "
