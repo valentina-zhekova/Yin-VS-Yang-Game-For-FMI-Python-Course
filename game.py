@@ -1,44 +1,53 @@
 from board import Board
 from player import Player
+from random import randint
 
 
 class Game:
 
-    def __init__(self, user_stone_type, computer_stone_type, mode,
-                 board=None, dimension=None, start_stones=None):
-        self.user = self.__set_player(user_stone_type)
-        self.computer = self.__set_player(computer_stone_type)
-        self.board = self.__set_board(board, dimension, start_stones,
-                                      self.user, self.computer)
-        self.mode = self.__set_mode(mode)
+    def __init__(self, user_sign, computer_sign, mode,
+                 size, board, start_stones):
+        self.user = Player(user_sign)
+        self.computer = Player(computer_sign)
+        self.board = Board(size, start_stones, board, self.user, self.computer)
+        self.mode = mode
         self.does_user_win = None
+        self.running = True
 
-    def __set_board(board, dimension, start_stones, player1, player2):
-        # if not unfinished game make new board
-        pass
-
-    def __set_player(self, user_stone_type):
-        pass
-
-    def __set_mode(self, mode):
-        pass
-
-    def play_user_turn(self, row, col):
-        # call board.possible_moves()
-        # if hasn't more moves call end(), otherwise:
-        # call board.move_stone()
-        # call play_computer_turn()
-        # return if the operation was succesful
-        pass
+    def play_user_turn(self, from_row, from_col, to_row, to_col):
+        return self.board.move_stone(self.user, self.computer,
+                                     from_row, from_col, to_row, to_col)
 
     def play_computer_turn(self):
-        # call board.possible_moves()
-        # if hasn't more moves call end(), otherwise:
-        # choose a move according to self.mode
-        # call board.move_stone()
-        pass
+        moves = self.board.possible_moves(self.computer, self.user)
+        if moves:
+            move = self.__choose_move(moves)
+            from_row, from_col = move[0][0], move[0][1]
+            to_row, to_col = move[1][0], move[1][1]
+            self.board.move_stone(self.computer, self.user,
+                                  from_row, from_col, to_row, to_col)
+            user_moves = self.board.possible_moves(self.user, self.computer)
+            if not user_moves:
+                self.end(self.user)
+        else:
+            self.end(self.computer)
 
-    def end(self):
-        # calculate result
-        # set self.does_user_win
-        pass
+    def __choose_move(self, moves):
+        if self.mode == "easy":
+            index = randint(0, len(moves) - 1)
+            move = moves[index]
+        else:
+            sorted_by_benefit = sorted(moves, key=lambda tup: tup[2])
+            move = sorted_by_benefit[-1]
+        return move
+
+    def end(self, player):
+        total = self.board.size * self.board.size
+        player_points = len(player.stones)
+        opponent_points = total - player_points
+        if player_points != opponent_points:
+            self.does_user_win = ((player is self.user and
+                                   player_points > opponent_points) or
+                                  (player is self.computer and
+                                   player_points < opponent_points))
+        self.running = False
