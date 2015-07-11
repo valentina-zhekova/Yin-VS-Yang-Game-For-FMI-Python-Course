@@ -43,7 +43,7 @@ class Game:
 
     def end(self, player):
         total = self.board.size * self.board.size
-        player_points = len(player.stones)
+        player_points = player.count_of_stones()
         opponent_points = total - player_points
         if player_points != opponent_points:
             self.does_user_win = ((player is self.user and
