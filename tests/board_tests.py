@@ -14,7 +14,7 @@ class BoardTests(unittest.TestCase):
         self.board = Board(4, 4, None, self.player1, self.player2)
 
     def test_are_fields_assigned(self):
-        self.assertEqual(4, self.board._Board__size)
+        self.assertEqual(4, self.board.size)
         self.assertEqual(4, self.board._Board__start_stones)
         self.assertEqual((self.player1, self.player2),
                          self.board._Board__players)
@@ -30,7 +30,7 @@ class BoardTests(unittest.TestCase):
                          self.board._Board__set_board(loaded_board))
 
     def test__set_board_by_parameteres(self):
-        self.board._Board__size = 6
+        self.board.size = 6
         self.board._Board__start_stones = 1
         self.assertEqual([['X', '_', '_', '_', '_', '_'],
                           ['_', '_', '_', '_', '_', '_'],
@@ -47,7 +47,7 @@ class BoardTests(unittest.TestCase):
                          self.board._Board__load_board(board))
 
     def test__set_board_row(self):
-        self.board._Board__size = 3
+        self.board.size = 3
         self.assertEqual(['*', '*', '*'],
                          self.board._Board__set_board_row('*', 7))
 
@@ -84,7 +84,7 @@ class BoardTests(unittest.TestCase):
             self.board.move_stone(self.player2, self.player1, 3, 0, 1, 3))
 
     def test__is_possible_move_clone_step(self):
-        self.board._Board__size = 5
+        self.board.size = 5
         self.board._Board__board = [['_', '_', '_', '_', '_'],
                                     ['_', '_', '_', '_', '_'],
                                     ['_', '_', 'X', '_', '_'],
@@ -94,7 +94,7 @@ class BoardTests(unittest.TestCase):
         self.assertTrue(self.board._Board__is_possible_move(2, 2, 3, 3))
 
     def test__is_possible_move_jump_step(self):
-        self.board._Board__size = 5
+        self.board.size = 5
         self.board._Board__board = [['_', '_', '_', '_', '_'],
                                     ['_', '_', '_', '_', '_'],
                                     ['_', '_', 'X', '_', '_'],
@@ -140,7 +140,7 @@ class BoardTests(unittest.TestCase):
                             1, 1, self.player2))
 
     def test__is_not_neighbour_move(self):
-        self.board._Board__size = 5
+        self.board.size = 5
         self.board._Board__board = [['_', '_', '_', '_', '_'],
                                     ['_', '_', '_', '_', '_'],
                                     ['_', '_', 'X', '_', '_'],
