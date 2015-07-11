@@ -167,7 +167,7 @@ class BoardTests(unittest.TestCase):
 
     def test_database_format(self):
         self.assertEqual("X|X,X,X,X|_,_,_,_|_,_,_,_|O,O,O,O",
-                         self.board.databse_format())
+                         self.board.database_format())
 
 if __name__ == '__main__':
     unittest.main()

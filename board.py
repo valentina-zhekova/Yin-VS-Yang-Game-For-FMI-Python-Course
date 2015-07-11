@@ -145,7 +145,7 @@ class Board:
             result += vertical_index + "  ".join(self.__board[row]) + " \n"
         return result
 
-    def databse_format(self):
+    def database_format(self):
         result = self.__players[0].sign
         for row in self.__board:
             result += '|' + ",".join(row)
