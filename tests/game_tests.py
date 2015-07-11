@@ -23,7 +23,7 @@ class GameTests(unittest.TestCase):
         self.assertEqual(True, self.game.running)
 
     def test_play_user_turn(self):
-        self.assertTrue(self.game.play_user_turn(0, 3, 2, 4))
+        self.assertTrue(self.game.play_user_turn(0, 2, 2, 3))
         self.assertEqual([['X', 'X', '_', 'X'],
                           ['_', '_', '_', '_'],
                           ['_', '_', '_', 'X'],
@@ -52,22 +52,43 @@ class GameTests(unittest.TestCase):
                                          ['X', 'X', 'X', 'X'],
                                          ['X', 'X', 'X', 'X'],
                                          ['O', 'O', 'O', 'O']]
+        self.game.user.add_stone(1, 0)
+        self.game.user.add_stone(1, 1)
+        self.game.user.add_stone(1, 2)
+        self.game.user.add_stone(1, 3)
+        self.game.user.add_stone(2, 0)
+        self.game.user.add_stone(2, 1)
+        self.game.user.add_stone(2, 2)
+        self.game.user.add_stone(2, 3)
         self.game.play_computer_turn()
         self.assertFalse(self.game.running)
 
     def test_play_computer_turn_no_more_user_moves(self):
+        self.game.mode = "hard"
         self.game.board._Board__board = [['X', 'X', 'X', 'X'],
                                          ['X', 'X', '_', 'X'],
-                                         ['X', 'X', 'X', 'X'],
+                                         ['X', 'X', 'O', 'X'],
                                          ['O', 'O', 'O', 'O']]
+        self.game.computer.add_stone(2, 2)
+        self.game.user.add_stone(1, 0)
+        self.game.user.add_stone(1, 1)
+        self.game.user.add_stone(1, 3)
+        self.game.user.add_stone(2, 0)
+        self.game.user.add_stone(2, 1)
+        self.game.user.add_stone(2, 3)
         self.game.play_computer_turn()
         self.assertFalse(self.game.running)
 
     def test__choose_move_hard_mode(self):
+        self.game.mode = "hard"
         self.game.board._Board__board = [['X', 'X', 'X', 'X'],
-                                         ['X', '_', '_', 'O']
+                                         ['X', '_', '_', 'O'],
                                          ['_', 'O', '_', 'O'],
                                          ['O', 'O', 'O', 'O']]
+        self.game.computer.add_stone(1, 3)
+        self.game.computer.add_stone(2, 3)
+        self.game.computer.add_stone(2, 1)
+        self.game.user.add_stone(1, 0)
         possible_moves = [((3, 0), (1, 1), 4), ((3, 0), (2, 0), 1),
                           ((3, 0), (1, 2), 3), ((3, 0), (2, 2), 0),
                           ((3, 1), (1, 1), 4), ((3, 1), (2, 0), 1),
@@ -82,14 +103,22 @@ class GameTests(unittest.TestCase):
                           ((2, 1), (2, 0), 2), ((2, 1), (1, 2), 4),
                           ((2, 1), (2, 2), 1)]
         self.assertEqual(((2, 1), (1, 1), 5),
-                         self.game._Game__chose_move(possible_moves))
+                         self.game._Game__choose_move(possible_moves))
 
     def test_end_user_wins(self):
         self.game.board._Board__board = [['X', 'X', 'X', 'X'],
                                          ['X', 'X', 'X', 'X'],
                                          ['X', 'X', 'X', 'X'],
                                          ['O', 'O', 'O', 'O']]
-        self.end(self.game.user)
+        self.game.user.add_stone(1, 0)
+        self.game.user.add_stone(1, 1)
+        self.game.user.add_stone(1, 2)
+        self.game.user.add_stone(1, 3)
+        self.game.user.add_stone(2, 0)
+        self.game.user.add_stone(2, 1)
+        self.game.user.add_stone(2, 2)
+        self.game.user.add_stone(2, 3)
+        self.game.end(self.game.user)
         self.assertTrue(self.game.does_user_win)
         self.assertFalse(self.game.running)
 
@@ -98,7 +127,15 @@ class GameTests(unittest.TestCase):
                                          ['O', 'O', 'O', 'O'],
                                          ['O', 'O', 'O', 'O'],
                                          ['O', 'O', 'O', 'O']]
-        self.end(self.game.user)
+        self.game.end(self.game.user)
+        self.game.computer.add_stone(1, 0)
+        self.game.computer.add_stone(1, 1)
+        self.game.computer.add_stone(1, 2)
+        self.game.computer.add_stone(1, 3)
+        self.game.computer.add_stone(2, 0)
+        self.game.computer.add_stone(2, 1)
+        self.game.computer.add_stone(2, 2)
+        self.game.computer.add_stone(2, 3)
         self.assertFalse(self.game.does_user_win)
         self.assertNotEqual(None, self.game.does_user_win)
         self.assertFalse(self.game.running)
@@ -108,7 +145,15 @@ class GameTests(unittest.TestCase):
                                          ['X', 'X', 'X', 'X'],
                                          ['O', 'O', 'O', 'O'],
                                          ['O', 'O', 'O', 'O']]
-        self.end(self.game.user)
+        self.game.user.add_stone(1, 0)
+        self.game.user.add_stone(1, 1)
+        self.game.user.add_stone(1, 2)
+        self.game.user.add_stone(1, 3)
+        self.game.computer.add_stone(2, 0)
+        self.game.computer.add_stone(2, 1)
+        self.game.computer.add_stone(2, 2)
+        self.game.computer.add_stone(2, 3)
+        self.game.end(self.game.user)
         self.assertFalse(self.game.does_user_win)
         self.assertEqual(None, self.game.does_user_win)
         self.assertFalse(self.game.running)
