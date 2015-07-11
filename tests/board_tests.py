@@ -46,10 +46,30 @@ class BoardTests(unittest.TestCase):
                           ['O', 'O']],
                          self.board._Board__load_board(board))
 
-    def test__set_board_row(self):
+    def test__set_board_one_stone(self):
+        self.assertEqual([['X', '_', '_', '_'],
+                          ['_', '_', '_', '_'],
+                          ['_', '_', '_', '_'],
+                          ['_', '_', '_', 'O']],
+                         self.board._Board__set_board_one_stone())
+
+    def test__set_board_stones_divisible_by_size(self):
+        self.assertEqual([['X', 'X', 'X', 'X'],
+                          ['_', '_', '_', '_'],
+                          ['_', '_', '_', '_'],
+                          ['O', 'O', 'O', 'O']],
+                         self.board._Board__set_board_stones_divisible_by_size
+                         ())
+
+    def test__set_row_empty_fields(self):
         self.board.size = 3
-        self.assertEqual(['*', '*', '*'],
-                         self.board._Board__set_board_row('*', 7))
+        self.assertEqual(['_', '_', '_'],
+                         self.board._Board__set_row())
+
+    def test__set_row_player_sign(self):
+        self.board.size = 3
+        self.assertEqual(['X', 'X', 'X'],
+                         self.board._Board__set_row(self.player1))
 
     def test_move_stone_jump_step(self):
         self.assertTrue(
@@ -121,12 +141,11 @@ class BoardTests(unittest.TestCase):
         self.assertFalse(self.board._Board__is_in_field_range(2, 5))
         self.assertTrue(self.board._Board__is_in_field_range(2, 0))
 
-    def test__convert_opponent_stones(self):
+    def test__convert_stones(self):
         self.board._Board__board = [['O', 'X', 'X'],
                                     ['O', '_', 'X'],
                                     ['O', 'O', 'X']]
-        self.board._Board__convert_opponent_stones(
-            1, 1, self.player1, self.player2)
+        self.board._Board__convert_stones(1, 1, self.player1, self.player2)
         self.assertTrue([['X', 'X', 'X'],
                          ['X', '_', 'X'],
                          ['X', 'X', 'X']], self.board._Board__board)
@@ -139,16 +158,16 @@ class BoardTests(unittest.TestCase):
                          self.board._Board__opponent_stones(
                             1, 1, self.player2))
 
-    def test__is_not_neighbour_move(self):
+    def test__is_jump_step(self):
         self.board.size = 5
         self.board._Board__board = [['_', '_', '_', '_', '_'],
                                     ['_', '_', '_', '_', '_'],
                                     ['_', '_', 'X', '_', '_'],
                                     ['_', '_', '_', '_', '_'],
                                     ['_', '_', '_', '_', '_']]
-        self.assertFalse(self.board._Board__is_not_neighbour_move(2, 2, 2, 3))
-        self.assertTrue(self.board._Board__is_not_neighbour_move(2, 2, 0, 4))
-        self.assertTrue(self.board._Board__is_not_neighbour_move(2, 2, 4, 0))
+        self.assertFalse(self.board._Board__is_jump_step(2, 2, 2, 3))
+        self.assertTrue(self.board._Board__is_jump_step(2, 2, 0, 4))
+        self.assertTrue(self.board._Board__is_jump_step(2, 2, 4, 0))
 
     def test_possible_moves(self):
         possibilities = [((0, 0), (1, 0), 1), ((0, 0), (1, 1), 1),
